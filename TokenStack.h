@@ -51,6 +51,9 @@ void initTokenStack(TokenStack *stk)
 
 unsigned operatorType(char* str)
 {
+    // ¡¡¡ALL CODES MUST BE > 0!!!
+    // For each code, CODE/10 is the 
+    // corresponding precedence.
     switch(str[0])
     {
         case '.':
@@ -255,18 +258,6 @@ char* isAVariable(char* str, char* buff)
     return str;
 } 
 
-int pushTokenStack()
-{
-    return 0;
-}
-
-Token popTokenStack(TokenStack *stk)
-{
-    Token a;
-    return a;
-}
-
-
 int loadFile(char* file_name, TokenStack* IN)
 {
     //--Loads the file into the buffer--
@@ -454,7 +445,7 @@ int loadFile(char* file_name, TokenStack* IN)
 
 
 
-    printf("\n%u\n",j); 
+    /* printf("\n%u\n",j); 
     for(i=(*IN).initial;i<(*IN).items;i++)
         if((*IN).tokens[i].operator.type>0)
             printf("\t%u (%u): OPTR %u\n",i,
@@ -464,8 +455,44 @@ int loadFile(char* file_name, TokenStack* IN)
             printf("\t%u (%u):%lli (%i)\n",i,
             (*IN).tokens[i].operand.line,
             (*IN).tokens[i].operand.content.integer, 
-            (*IN).tokens[i].operand.type);
+            (*IN).tokens[i].operand.type);*/
 
 
     return 0;
+}
+
+int pushTokenStack(TokenStack *stk, Token tkn)
+{
+    if(stk->items<maximum_Tokens)
+    {
+        stk->tokens[(stk->initial+stk->items)
+                    %maximum_Tokens]=tkn;
+        stk->items++;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+Token popTokenStack(TokenStack *stk)
+{
+    Token res;
+    if(stk->items>0)
+    {
+        res=stk->tokens[stk->initial];
+        stk->initial=(stk->initial+1)%maximum_Tokens;
+        stk->items--;
+    }
+    return res;
+}
+
+int emptyTokenStack(TokenStack *stk)
+{
+    if(stk->items>0)
+        return FALSE;
+    return TRUE;
+}
+
+Token topTokenStack(TokenStack *stk)
+{
+    return stk->tokens[stk->initial];
 }
